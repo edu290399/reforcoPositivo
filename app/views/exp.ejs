@@ -6,21 +6,21 @@
 
 </head>
 
-<body style="overflow: hidden;" onload="omissao()" >
+<body style="overflow: hidden;" onload="omissao(); attTempoSom()" >
     <audio id="som" preload="auto" ontimeupdate="marcaTempoB();marcaTempoA();"  loop>
         <source src="../sounds/<%= som %>"  type="audio/mpeg" >
      </audio>
 
     <div class="container">
         <form action='/envExpA' method='POST'>
-            <input name="tempoSom" id="tempoSomA" style="display:none" />
+            <input name="tempoSom" id="tempoSomA" style="display:block" />
             <button type="submit" onclick='clickA();playA()' class="botao" id="opA">A</button>
         </form>
     </div>
 
     <div class="container2">
         <form action='/envExpB' method='POST'>
-            <input name="tempoSom" id="tempoSomB" style="display:none" />
+            <input name="tempoSom" id="tempoSomB" style="display:block" />
             <button type="submit" onclick='clickB();playB()' class="botao" id="opB">B</button>
         </form>
     </div>
@@ -35,6 +35,13 @@
 
 <script type="text/javascript">
     var tempo = 0;
+
+    function attTempoSom(){
+        document.getElementById("som").currentTime = parseFloat("<%= tempoSom %>");
+        console.log("TEMPO PARAMETRO: ",parseFloat("<%= tempoSom %>"));
+    }
+    
+
     function clickA() {
         console.log("opA");
         console.log(tempo);

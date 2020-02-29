@@ -5,7 +5,7 @@
 
 </head>
 
-<body style="overflow: hidden;" onload="random()" >
+<body style="overflow: hidden;" onload="random(); attTempoSom()" >
     
   
     <audio id="som" name="som" preload="auto" ontimeupdate="marcaTempoB();marcaTempoA();" loop>
@@ -14,14 +14,14 @@
 
     <div class="container">
         <form id="formA" action='/envExpA' method='POST' style="display: none">
-            <input name="tempoSomA" id="tempoSomA" style="display:block"/>
+            <input name="tempoSom" id="tempoSomA" style="display:block"/>
             <button type="submit" onclick="clickA();playA()" class="botao" id="opA">A</button>
         </form>
     </div>
 
     <div class="container2">
         <form id="formB" action='/envExpB' method='POST' style="display: none">
-            <input name="tempoSomB" id="tempoSomB" style="display: block;"/>
+            <input name="tempoSom" id="tempoSomB" style="display: block;"/>
             <button type="submit" onclick="clickB();playB()" class="botao" id="opB" >B</button>
         </form>
     </div>
@@ -45,6 +45,11 @@
         if(rand == 1){
             document.getElementById("formB").style.display  = "block";
         }
+    }
+
+    function attTempoSom(){
+        document.getElementById("som").currentTime = parseFloat("<%= tempoSom %>");
+        console.log("TEMPO PARAMETRO: ",parseFloat("<%= tempoSom %>"));
     }
     
     

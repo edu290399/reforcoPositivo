@@ -25,7 +25,7 @@ module.exports.exp = function(app, req, res){
 module.exports.expForc = function(app, req, res){
 	som = importConfig.vars.somDb;
 	importAtrasoB = importExp.atrasoB;
-	res.render('expForc',{atrasoB: importAtrasoB , som : som});
+	res.render('expForc',{atrasoB: importAtrasoB , som : som, tempoSom: 0});
 	console.log("SOM: "+som);
 	console.log("Atraso de B DESCANSO: ",importAtrasoB);
 }

@@ -5,7 +5,7 @@
 
 </head>
 
-<body style="overflow: hidden;" onload="random()">
+<body style="overflow: hidden;" onload="random(); attTempoSom()">
 
     <audio id="som" preload="auto"  loop>
         <source src="../sounds/<%= som %>" type="audio/mpeg" >
@@ -46,6 +46,10 @@
         }
     }
     
+    function attTempoSom(){
+        document.getElementById("som").currentTime = parseFloat("<%= tempoSom %>");
+        console.log("TEMPO PARAMETRO: ",parseFloat("<%= tempoSom %>"));
+    }
     
     var tempo = 0;
 

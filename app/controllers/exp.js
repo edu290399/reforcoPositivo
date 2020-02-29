@@ -2,6 +2,7 @@
 //Contador para determinar se a opcao foi selecionada ou enviada
 var contPasso = 1;
 //Contador para determinar a tentativa
+module.exports.expContPasso = 1;
 var contRepet = 0;
 //Contador para determinar o bloco
 var contBloco = 0;//Array com as diferencas de atraso em relacao ao inicial de B (10s)
@@ -33,10 +34,12 @@ var menorPos = 0;
 
 var importConfig;
 var som;
+var tempoSom;
 
 //funcao para reiniciar as variaveis
 function reinicia(){
 	contPasso = 1;
+	module.exports.expContPasso = 1;
 	contRepet = 0;
 	contBloco = 0;
 	tempoFuga = 10000;
@@ -140,7 +143,9 @@ module.exports.envExpA = function(app, req, res, fase){
 	contPasso++;
 	console.log("Passo Agora: "+contPasso);
 	//verifica se o click eh de envio
+	
 	if(contPasso==2){
+			module.exports.expContPasso = 2;
 			//reinicia a variavel tempo fuga
 			tempoFuga = 10 * 1000;
 			//atualiza flag
@@ -160,6 +165,7 @@ module.exports.envExpA = function(app, req, res, fase){
 					}
 					flag = 0;
 					contPasso = 1;
+					module.exports.expContPasso = 1;
 					contRepet++;
 					tempoFuga = 10000;
 					console.log("Repet: "+contRepet);
@@ -175,6 +181,7 @@ module.exports.envExpA = function(app, req, res, fase){
 
 	//verifica se o click eh de envio
 	if (contPasso==3){
+		module.exports.expContPasso = 3;
 		flag = 0;
 		res.render('aguarde',{ITI: (25000 + tempoFuga ),  fase: fase});
 		console.log("RENDENRIZANDO: 25 +"+tempoFuga/1000);
@@ -193,6 +200,7 @@ module.exports.envExpA = function(app, req, res, fase){
 			console.log("Contador B: "+contB);
 		}
 		contPasso = 1;
+		module.exports.expContPasso = 1;
 		contRepet++;
 	}
 
@@ -203,7 +211,9 @@ module.exports.envExpB = function(app, req, res , fase){
 	console.log("Passo Antes: "+contPasso);
 	contPasso++;
 	console.log("Passo Agora: "+contPasso);
+	
 	if(contPasso==2){
+		module.exports.expContPasso = 2;
 		//reinicia a variavel tempo fuga
 		tempoFuga = 15 * 1000;
 		//atualiza a flag
@@ -223,6 +233,7 @@ module.exports.envExpB = function(app, req, res , fase){
 				}
 				flag = 0;
 				contPasso = 1;
+				module.exports.expContPasso = 1;
 				contRepet++;
 				tempoFuga = 15000;
 				console.log("Repet: "+contRepet);
@@ -238,6 +249,7 @@ module.exports.envExpB = function(app, req, res , fase){
 
 	//verifica se o click eh de envio
 	if (contPasso==3){
+		module.exports.expContPasso = 3;
 		//seta a flag
 		flag = 0;
 		res.render('aguarde',{ITI: (25000 + tempoFuga - (atrasoB * 1000)), fase: fase});
@@ -259,6 +271,7 @@ module.exports.envExpB = function(app, req, res , fase){
 			console.log("Contador B: "+contB);
 		}
 		contPasso = 1;
+		module.exports.expContPasso = 1;
 		contRepet++;
 	}
 
@@ -280,14 +293,16 @@ module.exports.continuar = function(app,req,res,fase){
 	console.log("DIF ON EXPO ----> "+importConfig.vars.difOnExpo);
 	var difOn = importConfig.vars.difOnExpo;
 	var difMin = importConfig.vars.difMinExpo;
+	tempoSom = require("../routes/exp").expTempo;
+	console.log("Tempo EXPORTADO: ",tempoSom);
 	//verifica se ainda esta na etapa forcada
 	if(contRepet<2){
 		console.log("ContRepet < 2");
 		if(fase == "TREINO"){
-			res.render('expForc',{atrasoB: atrasoB , som: som});
+			res.render('expForc',{atrasoB: atrasoB , som: som, tempoSom: tempoSom});
 		}
 		else if (fase == "TESTE"){
-			res.render('expForcTeste',{atrasoB: atrasoB , som: som});
+			res.render('expForcTeste',{atrasoB: atrasoB , som: som, tempoSom: tempoSom});
 			console.log(">>>TESTE<<<");
 		}else{
 			console.log("Erro na leitura da fase");
@@ -296,10 +311,10 @@ module.exports.continuar = function(app,req,res,fase){
 	}else if(contRepet>=2 && contRepet<6){
 		console.log("ContRepet >= 2 e < 6");
 		if(fase == "TREINO"){
-			res.render('exp',{atrasoB: atrasoB , som: som});
+			res.render('exp',{atrasoB: atrasoB , som: som, tempoSom: tempoSom});
 		}
 		else if (fase == "TESTE"){
-			res.render('expTeste',{atrasoB: atrasoB , som: som});
+			res.render('expTeste',{atrasoB: atrasoB , som: som, tempoSom: tempoSom});
 			console.log(">>>TESTE<<<");
 		}else{
 			console.log("Erro na leitura da fase");
@@ -311,14 +326,14 @@ module.exports.continuar = function(app,req,res,fase){
 
 		if(contA > contB){
 			console.log("Atraso B antes: "+atrasoB);
-			atrasoB++;
+			atrasoB--;
 			console.log("Atraso B depois: "+atrasoB);
 			module.exports.atrasoB = atrasoB;
 		}
 		//incrementa atraso de B
 		else if(contB > contA){
 			console.log("Atraso B antes: "+atrasoB);
-			atrasoB--;
+			atrasoB++;
 			console.log("Atraso B depois: "+atrasoB);
 			module.exports.atrasoB = atrasoB;
 		}
@@ -345,7 +360,7 @@ module.exports.continuar = function(app,req,res,fase){
 					difAtraso[4-contBloco] = atrasoBComp - 10;
 					console.log("Posicao do vetor: " + (4-contBloco) );
 					console.log("Diferenca do atraso: " + difAtraso[4-contBloco] );
-					res.render('expForc',{atrasoB : atrasoB , som: som});
+					res.render('expForc',{atrasoB : atrasoB , som: som, tempoSom: tempoSom});
 					contBloco++;
 				}
 				else{
@@ -364,19 +379,20 @@ module.exports.continuar = function(app,req,res,fase){
 					if( ( (maior - menor) <= difMin ) && !( (maiorPos == 0 && menorPos == 4 ) || (maiorPos == 4 && menorPos == 0) ) ){
 						console.log("Fim CONDICIONAL da fase de Treino");
 						 contPasso = 1;
+						 module.exports.expContPasso = 1;
 						 contRepet = 0;
 						 contBloco = 0;
 						 flag = 0;
-						return 	(res.render('expForcTeste',{atrasoB : atrasoB , som: som}),console.log("Mudando para o modo >>>TESTE<<<"));
+						return 	(res.render('expForcTeste',{atrasoB : atrasoB , som: som, tempoSom: tempoSom}),console.log("Mudando para o modo >>>TESTE<<<"));
 					}else{
-						res.render('expForc',{atrasoB : atrasoB , som: som});
+						res.render('expForc',{atrasoB : atrasoB , som: som, tempoSom: tempoSom});
 						contBloco++;
 					}
 				}
 				atrasoBComp = atrasoB;
 			}else{
 				console.log("COMPARACAO ENTRE BLOCOS DESLIGADA");
-				res.render('expForc',{atrasoB : atrasoB , som: som});
+				res.render('expForc',{atrasoB : atrasoB , som: som, tempoSom: tempoSom});
 				contBloco++;
 			}
 		}
