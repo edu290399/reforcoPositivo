@@ -1,0 +1,41 @@
+<html>
+	<head>
+		<title>Espera</title>
+		<link rel="stylesheet" type="text/css" href="css/aguarde.css">
+
+	</head>
+
+	<body>
+		<div>
+			
+			<form action = '/continuar' name="continuar" id="continuar" method='GET'>
+
+				<output> aguarde </output>
+						
+			</form>
+
+			<form action = '/continuarTeste' name="continuarTeste" id="continuarTeste" method='GET'/>
+		
+		</div>
+	</body>
+	
+</html>
+
+<script>
+	if("<%= fase %>" == "TREINO"){
+		console.log(">>>>TREINO<<<")
+		setTimeout(function(){  
+			document.getElementById("continuar").submit();
+			console.log("<%=ITI%>");
+		}, "<%= ITI %>");
+	}
+
+	if("<%= fase %>" == "TESTE"){
+		console.log(">>>>TESTE<<<")
+		setTimeout(function(){  
+			document.getElementById("continuarTeste").submit();
+			console.log("<%=ITI%>");
+		}, "<%= ITI %>");
+	}
+
+</script>
